@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import django_heroku
 import dj_database_url
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mohw^tpw5%s_ax#85r@sd*^m!h^gl8%m!2qenn$8f#x8l*z+d7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (sys.argv[1] == 'runserver')
 
 ALLOWED_HOSTS = ['localhost','127.0.0.1', '.pythonanywhere.com', '.sidewaysstories.com']
 
@@ -77,7 +78,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-     'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'blog',
         'USER': 'postgres',
@@ -86,7 +87,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -130,5 +130,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Configure Django App for Heroku.
 django_heroku.settings(locals())
 
-#Heroku-Postgres for django
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# #Heroku-Postgres for django
+if DEBUG == False:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
